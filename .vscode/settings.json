@@ -28,5 +28,10 @@
     "**/.vscode",
     "**/.vscode/**"
   ],
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
+  "files.associations": {
+    "*.gradle": "dockerfile",
+    "stdio.h": "c",
+    "stdlib.h": "c"
+  }
 }
