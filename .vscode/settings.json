@@ -32,6 +32,8 @@
   "files.associations": {
     "*.gradle": "dockerfile",
     "stdio.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "string.h": "c",
+    "stdbool.h": "c"
   }
 }
