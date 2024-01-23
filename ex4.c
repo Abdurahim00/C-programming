@@ -4,7 +4,7 @@
 #include <string.h>
 
 int isDecimal(const char *str) {
-    if (str == NULL || *str == '\0' || *str == '-') {
+    if (str == NULL || *str == '-') {
         return 0;
     }
     while (*str) {
@@ -18,10 +18,10 @@ int isDecimal(const char *str) {
 
 int countBit(int bits) {
     int count = 0, i;
-    if (bits == 0) return 0; // If the number is 0, return 0 as no bits are needed
+    if (bits == 0) return 0; // If the number is 0, exit as no bits are needed
 
-    for (i = 0; i < 32; i++) { // Iterate through each bit position (up to 32 bits)
-        if ((1 << i) & bits) // Check if the bit at position 'i' is set
+    for (i = 0; i < 64; i++) { // Iterate through each bit position (up to 64 bits)
+        if ((1 << i) & bits) // Check if the bit at position 'i' is set, shifting bits
             count = i; // Update count to the current bit position
     }
 
@@ -59,10 +59,36 @@ int main(int argc, char const *argv[]) {
 
     if (isDecimal(argv[1])) {
         long number = strtol(argv[1], NULL, 10);
+
+        //Nawras 
+        long numberCopy = number;
+        int binaryArray[128];
+
         int bits = countBit(number); // Use countBit to determine the number of bits required
-        char binaryStr[33]; // Adjust the size if needed
+        char binaryStr[33];
         binaryConversion(number, binaryStr, bits);
-        printf("%s\n", binaryStr);
+
+
+        int counter = 0;
+        while (numberCopy > 0)
+        {
+            binaryArray[counter] = numberCopy % 2;
+            numberCopy = numberCopy / 2;
+            counter++;
+        }
+        int zeros = (8 - (counter % 8));
+        for (int i = 0; i < zeros; i++)
+        {
+            printf("0");
+        }
+
+        for (int j = counter - 1; j >= 0; j--)
+        {
+            
+            printf( "%d", binaryArray[j]);
+        }printf("\n");
+
+       // printf("%s\n", binaryStr);
         return 0;
     } else {
 
