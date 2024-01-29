@@ -11,7 +11,6 @@ enum DIRECTION dir;
 
 void move(int *ptrXpos, int *ptrYpos, enum DIRECTION dir){
 
-
     if(dir == N && *ptrYpos < 99){
     (*ptrYpos)++;
 }
@@ -52,36 +51,43 @@ int main(int argc, char const *argv[])
     int ypos;
     int *ptrXpos = &xpos;
     int *ptrYpos = &ypos;
-    enum DIRECTION dir;
+    enum DIRECTION dir = N;
     enum DIRECTION *ptrDir = &dir;
 
-
-     ROBOT robot1 = {xpos, ypos, dir};
-     ROBOT robots[] = {robot1};
-    
-    
-     printf("Pick a starting X position ranging between 0-99 ");
-     scanf("%d", &xpos );  
+      printf("Pick a starting X position ranging between 0-99 ");
+     scanf("%d", &xpos);  
     printf("Pick a starting Y position ranging between 0-99 ");
     scanf("%d", &ypos);
-    move(&robot1.xpos, &robot1.ypos, robot1.dir);
-
- //printf("Move one step with m or rotate with t ");
-    printf("pick m to move or t to turn ");
-    
-    scanf("%s", &dir);
-    turn(&robot1.dir);
 
 
-    for (int i = 0; i < sizeof(robots)/sizeof(robots[0]); i++)
-    {
-        printf("%d\n", robots[i].xpos);
-        printf("%d\n", robots[i].ypos);
-        printf("%d\n", robots[i].dir);
+ROBOT robot1 = {xpos, ypos, dir};
+     ROBOT robots[] = {robot1};
 
+     
+    const char *directions[] = {"N", "O", "S", "W"};
+    char choice = ' ';
+    while (choice != 'e') {
+    printf("Pick 'm' to move, 't' to turn, or 'e' to exit: ");
+    scanf(" %c", &choice);
+
+    if(choice == 'm'){
+        move(&robot1.xpos, &robot1.ypos, robot1.dir);
+    } else if (choice == 't') {
+        turn(&robot1.dir);
     }
 
-   
-    /* code */
-    return 0;
+    // Print the current status of the robot
+    printf("Robot Position: X = %d, Y = %d, Direction = %c\n", robot1.xpos, robot1.ypos, directions[robot1.dir]);
+
+    if(choice == 'e'){
+        break;  // Break the loop if e is entered
+    }
 }
+
+ 
+ printf("Final position of the robot\n X: %d", robot1.xpos);
+  printf("\n Y: %d", robot1.ypos); 
+  return 0;
+   }
+   
+

@@ -1,68 +1,84 @@
 #include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
+#include <unistd.h> 
+#include <string.h>
+
+enum weekDays{Mon, Tue, Wed, Thur, Fri, Sat, Sun, NUM_DAYS};
+enum weeks{week1, week2, week3, week4, week5, NUM_WEEKS};
+
+// This is so i can get the position when the user enter a weekday string
+enum weekDays getWeekDayFromString(const char *ptrInputDay) {
+    if (strcmp(ptrInputDay, "Mon") == 0) return Mon;
+    if (strcmp(ptrInputDay, "Tue") == 0) return Tue;
+    if (strcmp(ptrInputDay, "Wed") == 0) return Wed;
+    if (strcmp(ptrInputDay, "Thur") == 0) return Thur;
+    if (strcmp(ptrInputDay, "Fri") == 0) return Fri;
+    if (strcmp(ptrInputDay, "Sat") == 0) return Sat;
+    if (strcmp(ptrInputDay, "Sun") == 0) return Sun;
+    return NUM_DAYS; // Invalid input
+}
+
+const char* getStringFromDay(enum weekDays day) {
+    switch(day) {
+        case Mon: return "Monday";
+        case Tue: return "Tuesday";
+        case Wed: return "Wednesday";
+        case Thur: return "Thursday";
+        case Fri: return "Friday";
+        case Sat: return "Saturday";
+        case Sun: return "Sunday";
+        default: return "Invalid";
+    }
+}
+
+
 
 int main(int argc, char const *argv[])
-{
-    if (argc != 2) {
-        printf("Error: No number provided. Please provide a number as a command line argument.\n");
-        return 0;
-    }
+{       enum weekDays wd;
+        enum weeks w;
+        enum weekDays *ptrWeekDays = &wd;
+        enum weeks *ptrWeeks = &w;
+        
+    int inputWeek;
+    char inputDay[10]; // Buffer to store the input day as a string
 
-if (argc > 1){
-    // We check if the argument is a valid decimal number
-    for (int i = 0; argv[1][i] != '\0'; i++) {
-        if (!isdigit(argv[1][i])) {
-            printf("Error: Invalid number.\n");
-           
-        }}
-    }
+    printf("Provide starting week: ");
+    scanf("%d", &inputWeek);
+    if(inputWeek < 1 && inputWeek >5){
+        printf("invalid week");
+    } 
+    
+    
 
-    // Convert the argument to an integer
-    int number = atoi(argv[1]);
+    printf("Provide starting day: ");
+    scanf("%s", inputDay);
 
-    printf("Number: %d\n", number);
 
-    // Find the highest bit set in the number
-    unsigned int mask = 0;
-    if (number != 0) {
-     mask = 1;
-     while (mask <= number) {
-        mask <<= 1;
-     }
-      mask >>= 1;
-    }  
+ enum weekDays dayValue = getWeekDayFromString(inputDay);
+    if (dayValue == NUM_DAYS) {
+        printf("invalid day");
 
-    // Handle the case where the number is 0
-    if (number == 0) {
-        mask = 1;
-    }
-
-    printf("Binary: 0b");
-    int numberOfOnes = 0;
-    int numberOfZeros = 0;
-    int finder = 0;
-    while (mask) {
-        if (number & mask) {
-            printf("1");
-            numberOfOnes++;
-            finder = 1;
-        } else if (finder) {
-            printf("0");
-            numberOfZeros++;
-        }
-
-        mask >>= 1;
-    }
-
-    // If the number is 0, print 0
-    if (!finder) {
-        printf("0");
     }
     
-    printf("\n");
-    printf("Number of 0s: %d", numberOfZeros);
-    printf("\nNumber of 1s: %d", numberOfOnes);
+
+    *ptrWeekDays = dayValue;
+    *ptrWeeks = inputWeek; 
+
+    while (*ptrWeeks <NUM_WEEKS && *ptrWeekDays <= Sun) {
+        
+        printf("Week %d, %s\n", *ptrWeeks + 1, getStringFromDay(*ptrWeekDays));
+
+        sleep(1); // Delay for 1 second
+
+        if (*ptrWeekDays == Sun) {
+            *ptrWeekDays = Mon;
+            if (*ptrWeeks < week5) {
+                (*ptrWeeks)++;
+            }
+        } else {
+            (*ptrWeekDays)++;
+             printf("Week %d, %s\n", *ptrWeeks + 1, getStringFromDay(*ptrWeekDays));
+        }
+    }
 
     return 0;
 }
