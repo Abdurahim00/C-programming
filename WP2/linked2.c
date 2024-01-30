@@ -46,46 +46,31 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-// ==== End of Main ======================================
-
-// Function to create a random list
+// ==== End of main ======================================
 REGTYPE *random_list(void)
 {
-    REGTYPE *top = NULL;
-    REGTYPE *old = NULL;
+    int nr, i = 0;
+    REGTYPE *top, *old, *item;
 
-    for (int i = 0; i < MAX; i++)
+    top = malloc(sizeof(REGTYPE));
+    top->number = rand() % 101;
+    top->prev = NULL;
+    top->next = NULL;
+    old = top;
+
+    for (i = 0; i < MAX; i++)
     {
-        REGTYPE *item = (REGTYPE *)malloc(sizeof(REGTYPE)); // allocate memory
-        if (item == NULL)
-        {
-
-            printf("clear memorty");
-            break;
-        }
-
+        item = malloc(sizeof(REGTYPE));
         item->number = rand() % 101;
+        item->prev = old;
         item->next = NULL;
-        item->prev = NULL;
-
-        if (top == NULL)
-        {
-            top = item;
-        }
-        else
-        {
-            old->next = item;
-            item->prev = old;
-        }
-
+        old->next = item;
         old = item;
     }
 
-    return top;
+    return (top);
 }
-
-// Function to add a node at the beginning of the list
+//==========================================================
 REGTYPE *add_first(REGTYPE *temp, int data)
 {
-    // Function logic here
 }
