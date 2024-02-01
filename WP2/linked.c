@@ -54,7 +54,6 @@ REGTYPE *random_list(void)
     REGTYPE *top = NULL;
     REGTYPE *old = NULL;
 
-    for (int i = 0; i < MAX; i++)
     {
         REGTYPE *item = (REGTYPE *)malloc(sizeof(REGTYPE)); // allocate memory
         if (item == NULL)

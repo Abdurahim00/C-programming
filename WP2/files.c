@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 // -----typedefs -------
+
 typedef struct
 {
     char firstname[20];
     char famname[20];
     char pers_number[13]; // yyyymmddnnnc
 } PERSON;
+
 // Function declaration (to be extend)
 PERSON input_record(void); // Reads a person’s record.
 
@@ -16,7 +18,7 @@ void write_new_file(PERSON *inrecord); // Creates a file and
 // writes the first record
 void printfile(void); // Prints out all persons in the file
 
-void search_by_firstname(char *name, int *ptrChoice); // Prints out the person if
+void search_by_firstname(char *name); // Prints out the person if
 // in list
 void append_file(PERSON *inrecord); // appends a new person to the file
 
@@ -45,19 +47,25 @@ int main(void)
             append_file(ptrPpost);
         }
         else if (input == 3)
-        {
-            int choice = 0;
-            int *ptrChoice = &choice;
-            printf("1: Search for a firstname\n");
-            printf("2: Search for a famName\n");
-            scanf("%d", ptrChoice);
+        { 
+    
+
             printf("Search: ");
             scanf("%19s", name); // Using %19s to prevent buffer overflow
-            search_by_firstname(name, ptrChoice);
+            
+
+            // Clear input buffer again
+            while (getchar() != '\n');
+                
+            search_by_firstname(name);
         }
         else if (input == 4)
         {
             printfile();
+        }
+        else if (input > 5)
+        {
+            printf("Choose a number between 1-4\n");
         }
     }
 
@@ -69,10 +77,15 @@ void write_new_file(PERSON *inrecord)
     PERSON dummy;
     // Check if the file already exists
     fptr = fopen("filename.bin", "rb");
-    // Initialize the dummy data
-    strcpy(dummy.firstname, "Josef");
-    strcpy(dummy.famname, "almasri");
-    strcpy(dummy.pers_number, "20000");
+
+    strncpy(dummy.firstname, "Josef", sizeof(dummy.firstname) - 1);
+    dummy.firstname[sizeof(dummy.firstname) - 1] = '\0'; // Explicitly null-terminate
+
+    strncpy(dummy.famname, "almasri", sizeof(dummy.famname) - 1);
+    dummy.famname[sizeof(dummy.famname) - 1] = '\0'; // Explicitly null-terminate
+
+    strncpy(dummy.pers_number, "20000", sizeof(dummy.pers_number) - 1);
+    dummy.pers_number[sizeof(dummy.pers_number) - 1] = '\0'; // Explicitly null-terminate
 
     if (fptr)
     {
@@ -101,10 +114,6 @@ void write_new_file(PERSON *inrecord)
 
 void printfile(void)
 {
-}
-
-void search_by_firstname(char *name, int *ptrChoice)
-{
     FILE *fptr;
     PERSON person;
 
@@ -116,50 +125,71 @@ void search_by_firstname(char *name, int *ptrChoice)
         return;
     }
 
-    int found = 0; // Flag to track if the name was found
-
-    while (*ptrChoice != 1 && *ptrChoice != 2)
+    // Read and print each record until the end of the file
+    while (fread(&person, sizeof(PERSON), 1, fptr) == 1)
     {
-
-        if (*ptrChoice == 1)
-        {
-            while (fread(&person, sizeof(PERSON), 1, fptr) == 1)
-            {
-                if (strcmp(name, person.firstname) == 0)
-                {
-                    printf("First Name: %s\n", person.firstname);
-                    printf("Last Name: %s\n", person.famname);
-                    printf("Personal Number: %s\n", person.pers_number);
-                    found = 1;
-                }
-
-            }
-        }
-        else if (*ptrChoice == 2)
-        {
-            while (fread(&person, sizeof(PERSON), 1, fptr) == 1)
-            {
-                if (strcmp(name, person.famname) == 0)
-                {
-                    printf("First Name: %s\n", person.firstname);
-                    printf("Last Name: %s\n", person.famname);
-                    printf("Personal Number: %s\n", person.pers_number);
-                    found = 1;
-                }
-            }
-        }
-
-        if (!found)
-        {
-            printf("No person with that name.\n");
-        }
-
-        // Seek back to the beginning of the file for another search
-        rewind(fptr);
+        printf("First Name: %s\n", person.firstname);
+        printf("Last Name: %s\n", person.famname);
+        printf("Personal Number: %s\n", person.pers_number);
+        printf("\n"); // Print a new line for readability between records
     }
 
     // Close the file
     fclose(fptr);
+}
+
+void search_by_firstname(char *name)
+{
+    int found = 0; // Flag to track if the name was found
+
+    do
+    {
+        FILE *fptr;
+        PERSON person;
+
+        // Open the binary file in "rb" mode for reading
+        fptr = fopen("filename.bin", "rb");
+        if (!fptr)
+        {
+            printf("Cannot open file for reading.\n");
+            return;
+        }
+
+        while (fread(&person, sizeof(PERSON), 1, fptr) == 1)
+        {
+            if (strcmp(name, person.famname) == 0 || strcmp(name, person.firstname) == 0)
+            {
+                printf("First Name: %s\n", person.firstname);
+                printf("Last Name: %s\n", person.famname);
+                printf("Personal Number: %s\n", person.pers_number);
+                found = 1;
+                break; // Break after finding the name
+            }
+        }
+
+        // Close the file
+        fclose(fptr);
+
+        if (!found)
+        {
+            printf("No person with that name.\n");
+
+            int choice;
+            printf("Search or go back by pressing 0: ");
+            scanf("%d", &choice);
+
+            if (choice == 0)
+            {
+                return; // Exit the function to go back to the main menu
+            }
+            else
+            {
+                printf("Enter a new name to search: ");
+                scanf("%19s", name); // Using %19s to prevent buffer overflow
+            }
+        }
+
+    } while (!found);
 }
 
 void append_file(PERSON *inrecord)
