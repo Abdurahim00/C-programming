@@ -1,6 +1,18 @@
 #include <stdio.h>
 #include <stdint.h>
 
+
+void print_bin(unsigned int value);
+uint16_t make_16bit(uint8_t least_significant, uint8_t most_significant);
+
+int main(int argc, char const *argv[])
+{
+
+    print_bin(43);
+    printf("\n");
+    print_bin(make_16bit(7, 1)); 
+    return 0;
+}
 void print_bin(unsigned int bits)
 {
 
@@ -23,14 +35,4 @@ uint16_t make_16bit(uint8_t least_significant, uint8_t
        uint16_t sum = most_right | least_significant;
 
        return sum;
-}
-
-
-int main(int argc, char const *argv[])
-{
-
-    print_bin(43);
-    printf("\n");
-    print_bin(make_16bit(7, 1)); 
-    return 0;
 }
