@@ -23,9 +23,7 @@ int main(int argc, char const *argv[])
     strcpy(copyOfstr, str);
     printf("Copied string: %s\n", copyOfstr);
 
-
- memset(copyOfstr, 0, sizeof(copyOfstr)); // reset for testing the copystring function
-
+    memset(copyOfstr, 0, sizeof(copyOfstr)); // reset for testing the copystring function
 
     copyString(str, copyOfstr);
     printf("Copied string (copyString function): %s\n", copyOfstr);
