@@ -1,34 +1,31 @@
 #include <stdio.h>
 #include <string.h>
 
-
-
 void count(char *text, int *countVowels, int *countConsonants)
-{char vowels[] = 
 {
-   "aeiouy"
-};
+    char vowels[] = {"aeiouy"};
 
-char consonants[] = {
-    "bcdfghjklmnpqrstvwxz"
-};
- *countVowels = 0;
+       
+
+    char consonants[] = {"bcdfghjklmnpqrstvwxz"};
+       
+    *countVowels = 0;
     *countConsonants = 0;
     int size = strlen(text);
     for (int i = 0; i < size; i++)
-    { char c = text[i];
+    {
+        char c = text[i];
         if (strchr(vowels, c))
         {
             (*countVowels)++;
-        }else if(strchr(consonants, c)){
+        }
+        else if (strchr(consonants, c))
+        {
 
             (*countConsonants)++;
         }
-    
-
-      
-    }return 0;
-
+    }
+    return 0;
 }
 
 int main(int argc, char const *argv[])
@@ -40,8 +37,8 @@ int main(int argc, char const *argv[])
     printf("Enter a string: ");
     scanf("%s", text);
 
-   count(text, &countVowels, &countConsonants);
-    
+    count(text, &countVowels, &countConsonants);
+
     printf("The number of vowels is %d and consonants are %d\n", countVowels, countConsonants);
 
     return 0;
