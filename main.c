@@ -1,53 +1,38 @@
-// Include all sections
+// include sections
+
 #include <stdio.h>
-#include <string.h>
-#define MAX 10 // the array input that can hold 10 char
+#include <stdlib.h>
 
-// this function basically just swaps 2 char
-void swap(char *x, char *y) {
-    // initialize a temp char to x
-    char temp = *x;
-    // x becomes y
-    *x = *y;
-    // y becomes temp which is x
-    *y = temp;
-}
-
-
-void permutation(char *a, int start, int end) {
-    int i; // declare i
-    if (start == end)  // if the start pointer and end pointer meet we print the char at then new position
-    
-        printf("%s\n", a);
-    else {
-        // else we loop while start iterates until end
-        for (i = start; i <= end; i++) {
-            // we call swap and set the a pointer as start pointer
-            swap((a+start), (a+i)); // Swap the current index with the loop index
-            permutation(a, start+1, end); // Recurse with the left index moved
-            swap((a+start), (a+i)); // Swap back to backtrack
-        }
+int main(int argc, char *argv[]) {
+    // Check for correct number of arguments
+    if (argc != 6) {
+        printf("invalid");
+        return 0;
     }
-}
 
-int main(int argc, char const *argv[]) {
-        char str[MAX]; // initialize the array that holds all the permutations
+    // validate input values and parse them 
+    unsigned int engine_on = atoi(argv[1]);
+    unsigned int floor_pos = atoi(argv[2]);
+    unsigned int door_pos = atoi(argv[3]);
+    unsigned int brake1 = atoi(argv[4]);
+    unsigned int brake2 = atoi(argv[5]);
 
-// if there is 2 arguments its invalid
-    if(argc != 2) {
-        printf("invalid\n");
-    }
-    // else if the lenght of the string is more or equals to 10 its invalid
-    else if(strlen(argv[1]) >= MAX) {
-        printf("invalid\n");
-    }
-    else{
-        // else we copy our input to the array with the MAX-1 size 
-    strncpy(str, argv[1], MAX-1);
-    str[MAX-1] = '\0'; // Null termination
-    int n = strlen(str); // n is the length of the array
+    // check ranges for each input
+    if (engine_on < 0 || engine_on > 1 ||
+        floor_pos < 0 || floor_pos > 7 ||
+        door_pos < 0 || door_pos > 3 ||
+        brake1 < 0 || brake1 > 1 ||
+        brake2 < 0 || brake2 > 1) {
+        printf("invalid");
+        return 0;
 
-    permutation(str, 0, n-1); // we call the permutation method with the array and starting and ending pos
     }
-    return 0; // exit
+
+    // Pack the bits into a single byte
+    unsigned char packedByte = (engine_on << 7) | (floor_pos << 4) | (door_pos << 2) | (brake1 << 1) | brake2;
+
+    // Print the packed byte in hexadecimal format
+    printf("0x%02X\n", packedByte);
+
+    return 0;
 }
