@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
     }
 
     int shift = atoi(argv[1]);
-    int c;
+    
 
     
 

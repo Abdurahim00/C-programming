@@ -1,38 +1,55 @@
-// include sections
+// include all sections
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-int main(int argc, char *argv[]) {
-    // Check for correct number of arguments
-    if (argc != 6) {
-        printf("invalid");
-        return 0;
+#define MAX_STRINGS 5 // 5 input strings
+#define MAX_LENGTH 1000 // max length 1000
+
+// function to find and remove the shortest string
+void findAndRemoveShortest(char arr[MAX_STRINGS][MAX_LENGTH], int *size) {
+    int shortestLength = strlen(arr[0]); // declare shortestlength to be the first string in the array
+    int index = 0; // declare index to 0 to keep track
+
+    // Find the index of the shortest string
+    for (int i = 1; i < *size; i++) {
+        int currentLength = strlen(arr[i]); // the length of the string at position i in the array
+        if (currentLength < shortestLength) { // if the string length is shorter than the first string in the array
+            shortestLength = currentLength; // we make current the shortest
+            index = i; // and we set index to i so we can keep track of its position
+        }
     }
 
-    // validate input values and parse them 
-    unsigned int engine_on = atoi(argv[1]);
-    unsigned int floor_pos = atoi(argv[2]);
-    unsigned int door_pos = atoi(argv[3]);
-    unsigned int brake1 = atoi(argv[4]);
-    unsigned int brake2 = atoi(argv[5]);
+    printf("Shortest string removed: %s\n", arr[index]);
 
-    // check ranges for each input
-    if (engine_on < 0 || engine_on > 1 ||
-        floor_pos < 0 || floor_pos > 7 ||
-        door_pos < 0 || door_pos > 3 ||
-        brake1 < 0 || brake1 > 1 ||
-        brake2 < 0 || brake2 > 1) {
-        printf("invalid");
-        return 0;
-
+    // Remove the shortest string by shifting the rest
+    for (int i = index; i < *size - 1; i++) {
+        strcpy(arr[i], arr[i + 1]); // we copy over to next postion
     }
 
-    // Pack the bits into a single byte
-    unsigned char packedByte = (engine_on << 7) | (floor_pos << 4) | (door_pos << 2) | (brake1 << 1) | brake2;
+    *size -= 1; // Decrease the size of the array
+}
 
-    // Print the packed byte in hexadecimal format
-    printf("0x%02X\n", packedByte);
+int main() {
+    // declare an array of max input 5 and 1000 length
+    char strings[MAX_STRINGS][MAX_LENGTH];
+    int currentSize = MAX_STRINGS; // current size 5
 
-    return 0;
+    // loop over the array
+    for (int i = 0; i < MAX_STRINGS; i++) {
+        // standard input with the maximum size 
+        fgets(strings[i], MAX_LENGTH, stdin);
+        strings[i][strcspn(strings[i], "\n")] = 0; // Remove newline character
+    }
+
+    // call the function
+    findAndRemoveShortest(strings, &currentSize);
+
+    printf("\nArray after removal:\n");
+    // loop over the array after we removed the shortest
+    for (int i = 0; i < currentSize; i++) {
+        printf("%s\n", strings[i]);
+    }
+
+    return 0; // exit
 }
